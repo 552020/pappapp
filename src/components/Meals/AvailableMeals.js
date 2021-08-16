@@ -4,12 +4,16 @@ import Card from "../UI/Card";
 import MealItem from "./MealItem/MealItem";
 import classes from "./AvailableMeals.module.css";
 
+import loading from "../../assets/loading4.png";
+
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchMeals = async () => {
       const response = await fetch(
-        "https://react-http-dcde0-default-rtdb.europe-west1.firebasedatabase.app/meals.json"
+        "https://react-http-dcde0-default-rtdb.europe-west1.firebasedatabase.app/meals"
       );
       const responseData = await response.json();
 
@@ -25,9 +29,19 @@ const AvailableMeals = () => {
       }
 
       setMeals(loadedMeals);
+      setIsLoading(false);
     };
     fetchMeals();
   }, []);
+
+  if (isLoading) {
+    return (
+      <section className={classes.MealsLoading}>
+        <p>Loading ...</p>
+        <img className={classes.imgpng} src={loading} alt="loading wheel" />
+      </section>
+    );
+  }
 
   const mealsList = meals.map((meal) => (
     <MealItem
